@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bangalore House Price Predictor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .bg-image {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') center center/cover no-repeat;
+            filter: blur(8px) brightness(0.6);
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            padding: 40px 32px 32px 32px;
+            max-width: 650px;
+            width: 100%;
+            margin: 40px 0;
+            z-index: 1;
+            position: relative;
+        }
+        .card h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            color: #222f3e;
+        }
+        .card p.subtitle {
+            text-align: center;
+            color: #636e72;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: 600;
+            color: #222f3e;
+            margin-bottom: 0.4rem;
+        }
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #dfe6e9;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-top: 0.2rem;
+            background: #f7fafd;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            background: #0984e3;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 14px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #0652dd;
+        }
+        .prediction {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #eaf6fb;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #222f3e;
+        }
+        .error {
+            background: #ffeaea;
+            color: #c0392b;
+        }
+        @media (max-width: 700px) {
+            .card { padding: 20px 4px; }
+            .form-row { flex-direction: column; gap: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-image"></div>
+    <div class="card">
+        <h1>Welcome to Bangalore House Price Predictor</h1>
+        <p class="subtitle">Want to predict the price of a new House in Bangalore? Try filling the details below:</p>
+        <form action="/predict" method="post">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="location">Select the Location:</label>
+                    <select id="location" name="location" required>
+                        <option value="">Select Location</option>
+                        <option value="1st Block Jayanagar" {% if location == '1st Block Jayanagar' %}selected{% endif %}>1st Block Jayanagar</option>
+                        <option value="1st Phase JP Nagar" {% if location == '1st Phase JP Nagar' %}selected{% endif %}>1st Phase JP Nagar</option>
+                        <option value="2nd Phase Judicial Layout" {% if location == '2nd Phase Judicial Layout' %}selected{% endif %}>2nd Phase Judicial Layout</option>
+                        <option value="2nd Stage Nagarbhavi" {% if location == '2nd Stage Nagarbhavi' %}selected{% endif %}>2nd Stage Nagarbhavi</option>
+                        <option value="5th Block Hbr Layout" {% if location == '5th Block Hbr Layout' %}selected{% endif %}>5th Block Hbr Layout</option>
+                        <option value="5th Phase JP Nagar" {% if location == '5th Phase JP Nagar' %}selected{% endif %}>5th Phase JP Nagar</option>
+                        <option value="6th Phase JP Nagar" {% if location == '6th Phase JP Nagar' %}selected{% endif %}>6th Phase JP Nagar</option>
+                        <option value="7th Phase JP Nagar" {% if location == '7th Phase JP Nagar' %}selected{% endif %}>7th Phase JP Nagar</option>
+                        <option value="8th Phase JP Nagar" {% if location == '8th Phase JP Nagar' %}selected{% endif %}>8th Phase JP Nagar</option>
+                        <option value="9th Phase JP Nagar" {% if location == '9th Phase JP Nagar' %}selected{% endif %}>9th Phase JP Nagar</option>
+                        <option value="AECS Layout" {% if location == 'AECS Layout' %}selected{% endif %}>AECS Layout</option>
+                        <option value="Abbigere" {% if location == 'Abbigere' %}selected{% endif %}>Abbigere</option>
+                        <option value="Akshaya Nagar" {% if location == 'Akshaya Nagar' %}selected{% endif %}>Akshaya Nagar</option>
+                        <option value="Ambalipura" {% if location == 'Ambalipura' %}selected{% endif %}>Ambalipura</option>
+                        <option value="Ambedkar Nagar" {% if location == 'Ambedkar Nagar' %}selected{% endif %}>Ambedkar Nagar</option>
+                        <option value="Other" {% if location == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bhk">Enter BHK:</label>
+                    <select id="bhk" name="bhk" required>
+                        <option value="">Select BHK</option>
+                        <option value="1" {% if bhk == 1 %}selected{% endif %}>1</option>
+                        <option value="2" {% if bhk == 2 %}selected{% endif %}>2</option>
+                        <option value="3" {% if bhk == 3 %}selected{% endif %}>3</option>
+                        <option value="4" {% if bhk == 4 %}selected{% endif %}>4</option>
+                        <option value="5" {% if bhk == 5 %}selected{% endif %}>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="bath">Enter Number of Bathrooms:</label>
+                    <select id="bath" name="bath" required>
+                        <option value="">Select Bathrooms</option>
+                        <option value="2" {% if bath == 2 %}selected{% endif %}>2</option>
+                        <option value="3" {% if bath == 3 %}selected{% endif %}>3</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="total_sqft">Enter Total Square Feet:</label>
+                    <select id="total_sqft" name="total_sqft" required>
+                        <option value="">Select Sq. Ft.</option>
+                        <option value="500" {% if total_sqft == 500 %}selected{% endif %}>500</option>
+                        <option value="750" {% if total_sqft == 750 %}selected{% endif %}>750</option>
+                        <option value="1000" {% if total_sqft == 1000 %}selected{% endif %}>1000</option>
+                        <option value="1200" {% if total_sqft == 1200 %}selected{% endif %}>1200</option>
+                        <option value="1500" {% if total_sqft == 1500 %}selected{% endif %}>1500</option>
+                        <option value="1800" {% if total_sqft == 1800 %}selected{% endif %}>1800</option>
+                        <option value="2000" {% if total_sqft == 2000 %}selected{% endif %}>2000</option>
+                        <option value="2500" {% if total_sqft == 2500 %}selected{% endif %}>2500</option>
+                        <option value="3000" {% if total_sqft == 3000 %}selected{% endif %}>3000</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Predict Price</button>
+        </form>
+        {% if prediction_text %}
+        <div class="prediction {% if 'Error' in prediction_text %}error{% endif %}">
+            {{ prediction_text }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
